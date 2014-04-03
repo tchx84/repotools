@@ -23,13 +23,13 @@ from argparse import ArgumentParser
 
 def _get_header(path):
     """ extracts header from package """
+    descriptor = os.open(path, os.O_RDONLY)
+
     transaction = rpm.ts()
     transaction.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
-
-    descriptor = os.open(path, os.O_RDONLY)
     header = transaction.hdrFromFdno(descriptor)
-    os.close(descriptor)
 
+    os.close(descriptor)
     return header
 
 

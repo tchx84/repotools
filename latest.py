@@ -45,23 +45,31 @@ def _get_data(path):
     return name, version, arch
 
 
-def _get_latest(directory):
+def _get_latest(directory, target_arch, keyword):
     """ classifies latest packages per arch """
     latest = {}
 
     for path, subdirs, files in os.walk(directory):
         for filename in files:
-            if filename.endswith('.rpm'):
-                filepath = os.path.join(path, filename)
-                name, version, arch = _get_data(filepath)
+            if keyword is not None and keyword not in filename:
+                continue
 
-                if arch not in latest:
-                    latest[arch] = {}
+            if not filename.endswith('.rpm'):
+                continue
 
-                if name not in latest[arch] or \
-                   latest[arch][name]['version'] < version:
-                    latest[arch][name] = {'path': filepath,
-                                          'version': version}
+            filepath = os.path.join(path, filename)
+            name, version, arch = _get_data(filepath)
+
+            if target_arch is not None and arch != target_arch:
+                continue
+
+            if arch not in latest:
+                latest[arch] = {}
+
+            if name not in latest[arch] or \
+               latest[arch][name]['version'] < version:
+                latest[arch][name] = {'path': filepath,
+                                      'version': version}
 
     return latest
 
@@ -70,10 +78,10 @@ if __name__ == '__main__':
     parser = ArgumentParser(description='latest packages from a directory')
     parser.add_argument('-d', '--dir', type=str, dest='dir', default='.')
     parser.add_argument('-a', '--arch', type=str, dest='arch', default=None)
+    parser.add_argument('-s', '--search', type=str, dest='key', default=None)
     args = parser.parse_args()
 
-    latest = _get_latest(args.dir)
+    latest = _get_latest(args.dir, args.arch, args.key)
     for arch in latest.keys():
-        if args.arch is None or args.arch == arch:
-            for package in latest[arch].keys():
-                print latest[arch][package]['path']
+        for name in latest[arch].keys():
+            print latest[arch][name]['path']

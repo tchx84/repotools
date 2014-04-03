@@ -17,6 +17,7 @@
 
 import os
 import json
+import shutil
 
 from packages import Packages
 
@@ -48,11 +49,12 @@ class Repositories(object):
                                 repo['keyword'])
             packages.find()
 
-            # purge packages already in updates
-            for package in packages:
-                check = os.path.join(repo['updates'], package['filename'])
-                if os.path.exists(check):
-                    packages.remove(package)
+            def _purged(path, name):
+                return not os.path.exists(os.path.join(path, name))
+
+            # XXX at this point packages is not longer Packages class
+            packages = [p for p in packages
+                        if _purged(repo['updates'], p['filename'])]
 
             # add purged packages list
             repo['packages'] = packages
@@ -81,8 +83,9 @@ class Repositories(object):
                 continue
 
             for package in sorted(repo['packages'], key=lambda e: e['name']):
-                print 'copying %s to %s' % (package['filename'], repo['name'])
                 path = os.path.join(repo['updates'], package['filename'])
+                shutil.copyfile(package['path'], path)
+                print 'copying %s to %s' % (package['filename'], repo['name'])
                 print '\tfrom %s \n\tto %s' % (package['path'], path)
 
     def update(self):

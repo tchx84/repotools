@@ -25,9 +25,11 @@ def _get_header(path):
     """ extracts header from package """
     transaction = rpm.ts()
     transaction.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
+
     descriptor = os.open(path, os.O_RDONLY)
     header = transaction.hdrFromFdno(descriptor)
     os.close(descriptor)
+
     return header
 
 
@@ -38,10 +40,9 @@ def _get_data(path):
     version = '%s-%s' % (header[rpm.RPMTAG_VERSION],
                          header[rpm.RPMTAG_RELEASE])
 
+    arch = header[rpm.RPMTAG_ARCH]
     if header[rpm.RPMTAG_SOURCE]:
         arch = 'src'
-    else:
-        arch = header[rpm.RPMTAG_ARCH]
 
     return name, version, arch
 

@@ -47,7 +47,7 @@ def _get_data(path):
     return name, version, arch
 
 
-def _get_latest(directory, target_arch, keyword):
+def _get_latest(directory, target_archs, keyword):
     """ classifies latest packages per arch """
     latest = {}
 
@@ -62,7 +62,7 @@ def _get_latest(directory, target_arch, keyword):
             filepath = os.path.join(path, filename)
             name, version, arch = _get_data(filepath)
 
-            if target_arch is not None and arch != target_arch:
+            if target_archs is not None and arch not in target_archs:
                 continue
 
             if arch not in latest:
@@ -79,11 +79,11 @@ def _get_latest(directory, target_arch, keyword):
 if __name__ == '__main__':
     parser = ArgumentParser(description='latest packages from a directory')
     parser.add_argument('-d', '--dir', type=str, dest='dir', default='.')
-    parser.add_argument('-a', '--arch', type=str, dest='arch', default=None)
+    parser.add_argument('-a', '--archs', type=str, dest='archs', nargs="*", default=None)
     parser.add_argument('-s', '--search', type=str, dest='key', default=None)
     args = parser.parse_args()
 
-    latest = _get_latest(args.dir, args.arch, args.key)
+    latest = _get_latest(args.dir, args.archs, args.key)
     for arch in latest.keys():
         for name in latest[arch].keys():
             print latest[arch][name]['path']

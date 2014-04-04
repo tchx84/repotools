@@ -15,42 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 
-root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-path=$root/etc/repos.json
 env=$1
-
 if [ -z $env ]; then
     echo "No environment was given {testing, updates}."
     exit -1
 fi
 
-if [ $env == "updates" ]; then
-    echo "Updates packages to updates."
-    $root/libs/repositories.py -p $path
+path=./etc/repos.json
+user="$(./helpers/get_key.py -p ${path} -k user)"
+server="$(./helpers/get_key.py -p ${path} -k server)"
+directory="$(./helpers/get_key.py -p ${path} -k directory)"
 
-    if [ $? != 0 ]; then
-        echo "No packages were updated."
-        exit -1
-    fi
-
-fi
-
-repos="$(${root}/helpers/find_paths.py -p ${path} -e ${env})";
-
-for repo in $repos;
-do
-    echo 'Updating ' $repo
-
-    rpm --resign $repo/* &> /dev/null
-    if [ $? = 1 ]; then
-        echo "Could not sign packages."
-        exit -1
-    fi
-
-    createrepo --database $repo &> /dev/null
-    if [ $? != 0  ]; then
-        echo "Could not update repodata."
-        exit -1
-    fi
-
-done
+ssh $user@$server $directory/update.sh $env

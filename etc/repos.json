@@ -1,7 +1,11 @@
 {
-    "description": "AU1D repositories",
+    "description": "Example repositories",
 
-    "signing": "/home/tch/Devel/olpc-repo-tools/key",
+    "user": "tch",
+
+    "server": "localhost",
+
+    "directory": "/home/tch/Devel/olpc-repo-tools",
 
     "list": [
         {"name": "all",

@@ -28,6 +28,7 @@ user="$(./helpers/get_key.py -p ${path} -k user)"
 server="$(./helpers/get_key.py -p ${path} -k server)"
 directory="$(./helpers/get_key.py -p ${path} -k directory)"
 remote_path="$(./helpers/find_paths.py -p ${path} -e testing -n ${name})"
+packages="$(./helpers/purge.py -p ${path} -n ${name} -f ${packages})"
 
 echo "uploading to" $user@$server:$remote_path/
 for package in $packages;

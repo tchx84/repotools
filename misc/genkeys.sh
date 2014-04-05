@@ -17,23 +17,7 @@
 
 RPM_MACROS_PATH=~/.rpmmacros
 
-cat >signing <<EOF
-%echo Generating a basic OpenPGP key
-Key-Type: DSA
-Key-Length: 1024
-Subkey-Type: ELG-E
-Subkey-Length: 1024
-Name-Real: One Education
-Name-Comment: One Laptop Per Child Australia
-Name-Email: info@one-education.org
-Expire-Date: 0
-Passphrase: 12345
-%pubring key.public
-%secring key.private
-%commit
-%echo done
-EOF
-gpg --batch --gen-key signing
+gpg --batch --gen-key signing.batch
 gpg --import key.private
 gpg --list-secret-keys
 

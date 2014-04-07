@@ -42,7 +42,7 @@ How can I use it?
     ```
 
     repotools will copy all the rpms in the ./mock/ directory that comply
-    with the repository name xo1 and its definitions.
+    with the xo1 definitions, to the corresponding xo1 testing reository.
 
 2. Sign packages and update repositories metadata.
 

@@ -43,11 +43,10 @@ class Repositories(object):
                repo['name'] not in self._names:
                 continue
 
-            keywords = []
-            if repo['keywords']:
-                keywords += repo['keywords']
+            keywords = repo['keywords']
             if self._keywords:
-                keywords += self._keywords
+                # overwrite repo definition
+                keywords = self._keywords
 
             packages = Packages(repo['archs'], keywords)
             packages.find(repo['testing'])

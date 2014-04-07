@@ -17,10 +17,11 @@
 
 name=$1
 env=$2
+keywords="${@:3}"
 
 path=./etc/repos.json
 user="$(./helpers/get_key.py -p ${path} -k user)"
 server="$(./helpers/get_key.py -p ${path} -k server)"
 directory="$(./helpers/get_key.py -p ${path} -k directory)"
 
-ssh $user@$server $directory/update.sh $name $env
+ssh $user@$server $directory/update.sh $name $env $keywords

@@ -19,6 +19,7 @@ root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 path=$root/etc/repos.json
 name=$1
 env=$2
+keywords="${@:3}"
 
 if [ -z $name ]; then
     echo "No repository was given."
@@ -41,7 +42,7 @@ do
 
     # copy latest packages to updates, if needed
     if [ $env == "updates" ]; then
-        $root/helpers/update.py -p $path -n ${name}
+        $root/helpers/update.py -p $path -n ${name} -s $keywords
         if [ $? != 0 ]; then
             echo "No packages were updated."
             exit -1

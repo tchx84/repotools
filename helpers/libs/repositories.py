@@ -26,9 +26,10 @@ class Repositories(object):
 
     CONFIRM_TEXT = 'confirm'
 
-    def __init__(self, path, names):
+    def __init__(self, path, names, keywords):
         self._path = path
         self._names = names
+        self._keywords = keywords
         self._repos = None
 
         with open(self._path) as file:
@@ -42,7 +43,13 @@ class Repositories(object):
                repo['name'] not in self._names:
                 continue
 
-            packages = Packages(repo['archs'], repo['keyword'])
+            keywords = []
+            if repo['keywords']:
+                keywords += repo['keywords']
+            if self._keywords:
+                keywords += self._keywords
+
+            packages = Packages(repo['archs'], keywords)
             packages.find(repo['testing'])
 
             def _purged(path, name):

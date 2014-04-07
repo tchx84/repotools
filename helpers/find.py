@@ -20,8 +20,8 @@ from argparse import ArgumentParser
 from libs.packages import Packages
 
 
-def find(directory, architectures, keyword):
-    packages = Packages(architectures, keyword)
+def find(directory, architectures, keywords):
+    packages = Packages(architectures, keywords)
     packages.find(directory)
 
     for package in sorted(packages, key=lambda e: e['name']):
@@ -41,8 +41,9 @@ if __name__ == '__main__':
                         nargs='*')
     parser.add_argument('-s', '--search',
                         type=str,
-                        dest='keyword',
+                        dest='keywords',
+                        nargs='*',
                         default=None)
 
     args = parser.parse_args()
-    find(args.directory, args.architectures, args.keyword)
+    find(args.directory, args.architectures, args.keywords)

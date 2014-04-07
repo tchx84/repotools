@@ -22,8 +22,8 @@ from argparse import ArgumentParser
 from libs.repositories import Repositories
 
 
-def update(path, names):
-    repositories = Repositories(path, names)
+def update(path, names, keywords):
+    repositories = Repositories(path, names, keywords)
     if repositories.update():
         sys.exit(0)
     else:
@@ -33,17 +33,20 @@ def update(path, names):
 
 if __name__ == '__main__':
     parser = ArgumentParser(description='update packages from testing')
-    parser.add_argument('-p',
-                        '--path',
+    parser.add_argument('-p', '--path',
                         type=str,
                         dest='path',
                         required=True)
-    parser.add_argument('-n',
-                        '--names',
+    parser.add_argument('-n', '--names',
                         type=str,
                         dest='names',
                         nargs='*',
                         default=None)
+    parser.add_argument('-s', '--keywords',
+                        type=str,
+                        dest='keywords',
+                        nargs='*',
+                        default=None)
 
     args = parser.parse_args()
-    update(args.path, args.names)
+    update(args.path, args.names, args.keywords)

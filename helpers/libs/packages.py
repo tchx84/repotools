@@ -21,9 +21,9 @@ import rpm
 
 class Packages(list):
 
-    def __init__(self, architectures, keyword):
+    def __init__(self, architectures, keywords):
         self._architectures = architectures
-        self._keyword = keyword
+        self._keywords = keywords
 
         self._transaction = rpm.ts()
         self._transaction.setVSFlags(rpm._RPMVSF_NOSIGNATURES)
@@ -51,20 +51,28 @@ class Packages(list):
 
         return name, version, arch
 
-    def _match_name(self, filename):
+    def _match_keyword(self, filename):
         """ check if filename matches accepted keywords """
+
         if not filename.endswith('.rpm'):
             return False
-        if self._keyword is not None and \
-           self._keyword not in filename:
+
+        # act like OR
+        if self._keywords:
+            for keyword in self._keywords:
+                if keyword in filename:
+                    return True
             return False
+
         return True
 
     def _match_arch(self, arch):
-        """ chck if arch matches accepted archs """
+        """ check if arch matches accepted archs """
+
         if self._architectures is not None and \
            arch not in self._architectures:
             return False
+
         return True
 
     def find(self, directory):
@@ -75,7 +83,7 @@ class Packages(list):
 
         for path, subdirs, files in os.walk(directory):
             for filename in files:
-                if not self._match_name(filename):
+                if not self._match_keyword(filename):
                     continue
 
                 filepath = os.path.join(path, filename)
@@ -106,9 +114,10 @@ class Packages(list):
 
     def purge(self, files):
         """ purge packages from list of files """
+
         for path in files:
             filename = os.path.basename(path)
-            if not self._match_name(filename):
+            if not self._match_keyword(filename):
                 continue
 
             name, version, arch = self._get_data(path)

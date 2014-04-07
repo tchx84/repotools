@@ -12,35 +12,35 @@
          "updates": "/home/tch/Devel/olpc-repo-tools/au1d/packages/updates/all",
          "testing": "/home/tch/Devel/olpc-repo-tools/au1d/packages/testing/all",
          "archs": null,
-         "keyword": null
+         "keywords": null
         },
 
         {"name": "xo1",
          "updates": "/home/tch/Devel/olpc-repo-tools/au1d/packages/updates/xo1/",
          "testing": "/home/tch/Devel/olpc-repo-tools/au1d/packages/testing/xo1",
          "archs": ["i686", "src"],
-         "keyword": null
+         "keywords": null
         },
 
         {"name": "xo1.5",
          "updates": "/home/tch/Devel/olpc-repo-tools/au1d/packages/updates/xo1.5",
          "testing": "/home/tch/Devel/olpc-repo-tools/au1d/packages/testing/xo1.5",
          "archs": ["i686", "src"],
-         "keyword": null
+         "keywords": null
         },
 
         {"name": "xo1.75",
          "updates": "/home/tch/Devel/olpc-repo-tools/au1d/packages/updates/xo1.75",
          "testing": "/home/tch/Devel/olpc-repo-tools/au1d/packages/testing/xo1.75",
          "archs": ["armv7hl", "src"],
-         "keyword": null
+         "keywords": null
         },
 
         {"name": "xo4",
          "updates": "/home/tch/Devel/olpc-repo-tools/au1d/packages/updates/xo4",
          "testing": "/home/tch/Devel/olpc-repo-tools/au1d/packages/testing/xo4",
          "archs": ["armv7hl", "src"],
-         "keyword": "kernel"
+         "keywords": ["kernel", "driver"]
         }
     ]
 }

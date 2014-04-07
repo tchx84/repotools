@@ -32,7 +32,7 @@ def purge(path, name, files):
     if repo is None:
         return
 
-    packages = Packages(repo['archs'], repo['keyword'])
+    packages = Packages(repo['archs'], repo['keywords'])
     packages.purge(files)
     for package in sorted(packages, key=lambda e: e['name']):
         print package['path']

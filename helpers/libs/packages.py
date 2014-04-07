@@ -18,13 +18,10 @@
 import os
 import rpm
 
-from argparse import ArgumentParser
-
 
 class Packages(list):
 
-    def __init__(self, directory, architectures, keyword):
-        self._directory = directory
+    def __init__(self, architectures, keyword):
         self._architectures = architectures
         self._keyword = keyword
 
@@ -70,13 +67,13 @@ class Packages(list):
             return False
         return True
 
-    def _do_find(self):
+    def find(self, directory):
         """ find latest versions of packages """
 
         # use dict for indexing packages
         _index = {}
 
-        for path, subdirs, files in os.walk(self._directory):
+        for path, subdirs, files in os.walk(directory):
             for filename in files:
                 if not self._match_name(filename):
                     continue
@@ -105,32 +102,22 @@ class Packages(list):
                            'filename': filename,
                            'path': filepath}
                 self.append(package)
-
                 _index[arch][name] = package
 
-    def find(self):
-        self._do_find()
+    def purge(self, files):
+        """ purge packages from list of files """
+        for path in files:
+            filename = os.path.basename(path)
+            if not self._match_name(filename):
+                continue
 
+            name, version, arch = self._get_data(path)
+            if not self._match_arch(arch):
+                continue
 
-if __name__ == '__main__':
-    parser = ArgumentParser(description='latest packages from a directory')
-    parser.add_argument('-d', '--dir',
-                        type=str,
-                        dest='directory',
-                        default='.')
-    parser.add_argument('-a', '--archs',
-                        type=str,
-                        dest='architectures',
-                        default=None,
-                        nargs='*')
-    parser.add_argument('-s', '--search',
-                        type=str,
-                        dest='keyword',
-                        default=None)
-    args = parser.parse_args()
-
-    packages = Packages(args.directory, args.architectures, args.keyword)
-    packages.find()
-
-    for package in sorted(packages, key=lambda e: e['name']):
-        print package['path']
+            package = {'name': name,
+                       'arch': arch,
+                       'version': version,
+                       'filename': filename,
+                       'path': path}
+            self.append(package)

@@ -27,10 +27,13 @@ path=./etc/repos.json
 user="$(./helpers/get_key.py -p ${path} -k user)"
 server="$(./helpers/get_key.py -p ${path} -k server)"
 directory="$(./helpers/get_key.py -p ${path} -k directory)"
-remote_path="$(./helpers/find_paths.py -p ${path} -e testing -n ${name})"
+remote_path="$(./helpers/get_paths.py -p ${path} -e testing -n ${name})"
 packages="$(./helpers/purge.py -p ${path} -n ${name} -f ${packages})"
 
-echo "uploading to" $user@$server:$remote_path/
+echo "Uploading to:"
+echo -e '\t'$user@$server:$remote_path/
+
+echo "Packages:"
 for package in $packages;
 do
     echo -e '\t'$(basename $package)
@@ -40,7 +43,7 @@ echo "Please type \"confirm\" to continue..."
 read confirm
 
 if [ "$confirm" != "confirm" ]; then
-    echo "nothing has been done."
+    echo "Nothing has been done."
     exit -1
 fi
 

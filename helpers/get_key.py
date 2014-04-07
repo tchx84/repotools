@@ -14,25 +14,21 @@
 #
 # You should have received a copy of the GNU General Public Lic
 
-import sys
 import json
 
 from argparse import ArgumentParser
 
 
-def _get_key(path, key):
+def get_key(path, key):
     with open(path) as file:
         config = json.loads(file.read())
         print config[key]
 
-def _main():
+
+if __name__ == '__main__':
     parser = ArgumentParser(description='get repository key')
     parser.add_argument('-p', '--path', type=str, dest='path', required=True)
     parser.add_argument('-k', '--key', type=str, dest='key', required=True)
 
     args = parser.parse_args()
-    _get_key(args.path, args.key)
-
-
-if __name__ == '__main__':
-   _main()
+    get_key(args.path, args.key)

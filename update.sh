@@ -17,36 +17,45 @@
 
 root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 path=$root/etc/repos.json
-env=$1
+name=$1
+env=$2
 
-if [ -z $env ]; then
-    echo "No environment was given {testing, updates}."
+if [ -z $name ]; then
+    echo "No repository was given."
+    echo "Usage:" $0 "<name> <environment>"
     exit -1
 fi
 
-if [ $env == "updates" ]; then
-    echo "Updates packages to updates."
-    $root/libs/repositories.py -p $path
-
-    if [ $? != 0 ]; then
-        echo "No packages were updated."
-        exit -1
-    fi
-
+if [ -z $env ]; then
+    echo "No environment was given."
+    echo "Usage:" $0 "<name> <environment>"
+    exit -1
 fi
 
-repos="$(${root}/helpers/find_paths.py -p ${path} -e ${env})";
+
+repos="$(${root}/helpers/get_paths.py -p ${path} -e ${env} -n ${name})";
 
 for repo in $repos;
 do
-    echo 'Updating ' $repo
+    echo "Updating" $repo
 
+    # copy latest packages to updates, if needed
+    if [ $env == "updates" ]; then
+        $root/helpers/update.py -p $path -n ${name}
+        if [ $? != 0 ]; then
+            echo "No packages were updated."
+            exit -1
+        fi
+    fi
+
+    # sign packages
     rpm --resign $repo/* &> /dev/null
     if [ $? = 1 ]; then
         echo "Could not sign packages."
         exit -1
     fi
 
+    # update repository metadata
     createrepo --database $repo &> /dev/null
     if [ $? != 0  ]; then
         echo "Could not update repodata."

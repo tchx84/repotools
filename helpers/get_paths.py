@@ -14,13 +14,12 @@
 #
 # You should have received a copy of the GNU General Public Lic
 
-import sys
 import json
 
 from argparse import ArgumentParser
 
 
-def _read_paths(path, env, name):
+def get_paths(path, env, name):
     with open(path) as file:
         config = json.loads(file.read())
         for repo in config['list']:
@@ -28,15 +27,12 @@ def _read_paths(path, env, name):
                 continue
             print repo[env]
 
-def _main():
+
+if __name__ == '__main__':
     parser = ArgumentParser(description='find paths by environment')
     parser.add_argument('-p', '--path', type=str, dest='path', required=True)
     parser.add_argument('-e', '--env', type=str, dest='env', required=True)
     parser.add_argument('-n', '--name', type=str, dest='name', default=None)
 
     args = parser.parse_args()
-    _read_paths(args.path, args.env, args.name)
-
-
-if __name__ == '__main__':
-   _main()
+    get_paths(args.path, args.env, args.name)

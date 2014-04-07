@@ -15,15 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 
-env=$1
-if [ -z $env ]; then
-    echo "No environment was given {testing, updates}."
-    exit -1
-fi
+name=$1
+env=$2
 
 path=./etc/repos.json
 user="$(./helpers/get_key.py -p ${path} -k user)"
 server="$(./helpers/get_key.py -p ${path} -k server)"
 directory="$(./helpers/get_key.py -p ${path} -k directory)"
 
-ssh $user@$server $directory/update.sh $env
+ssh $user@$server $directory/update.sh $name $env

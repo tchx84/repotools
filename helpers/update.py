@@ -12,50 +12,38 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public Lic
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
 
-import json
+import sys
 
 from argparse import ArgumentParser
 
-from libs.packages import Packages
+from libs.repositories import Repositories
 
 
-def purge(path, name, files):
-    with open(path) as file:
-        config = json.loads(file.read())
-
-    for repo in config['list']:
-        if name == repo['name']:
-            break
-
-    if repo is None:
-        return
-
-    packages = Packages(repo['archs'], repo['keyword'])
-    packages.purge(files)
-    for package in sorted(packages, key=lambda e: e['name']):
-        print package['path']
+def update(path, names):
+    repositories = Repositories(path, names)
+    if repositories.update():
+        sys.exit(0)
+    else:
+        print 'Nothing has been done.'
+        sys.exit(1)
 
 
 if __name__ == '__main__':
-    parser = ArgumentParser(description='')
+    parser = ArgumentParser(description='update packages from testing')
     parser.add_argument('-p',
                         '--path',
                         type=str,
                         dest='path',
                         required=True)
     parser.add_argument('-n',
-                        '--name',
+                        '--names',
                         type=str,
-                        dest='name',
-                        required=True)
-    parser.add_argument('-f',
-                        '--files',
-                        type=str,
-                        dest='files',
+                        dest='names',
                         nargs='*',
-                        required=True)
+                        default=None)
 
     args = parser.parse_args()
-    purge(args.path, args.name, args.files)
+    update(args.path, args.names)

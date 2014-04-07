@@ -54,6 +54,22 @@ class Packages(list):
 
         return name, version, arch
 
+    def _match_name(self, filename):
+        """ check if filename matches accepted keywords """
+        if not filename.endswith('.rpm'):
+            return False
+        if self._keyword is not None and \
+           self._keyword not in filename:
+            return False
+        return True
+
+    def _match_arch(self, arch):
+        """ chck if arch matches accepted archs """
+        if self._architectures is not None and \
+           arch not in self._architectures:
+            return False
+        return True
+
     def _do_find(self):
         """ find latest versions of packages """
 
@@ -62,18 +78,13 @@ class Packages(list):
 
         for path, subdirs, files in os.walk(self._directory):
             for filename in files:
-                if self._keyword is not None and \
-                   self._keyword not in filename:
-                    continue
-
-                if not filename.endswith('.rpm'):
+                if not self._match_name(filename):
                     continue
 
                 filepath = os.path.join(path, filename)
                 name, version, arch = self._get_data(filepath)
 
-                if self._architectures is not None and \
-                   arch not in self._architectures:
+                if not self._match_arch(arch):
                     continue
 
                 if arch not in _index:

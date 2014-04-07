@@ -38,15 +38,20 @@ def _purge(path, name, files):
             repo = _repo
             break
 
-    # XXX BAD HACK :(
-    packages = Packages(None, None, None)
-    for file in files:
-        name, version, arch = packages._get_data(file)
-        if repo['keyword'] and repo['keyword'] not in name:
+    if repo is None:
+        return
+
+    packages = Packages(None, repo['archs'], repo['keyword'])
+    for filepath in files:
+        filename = os.path.basename(filepath)
+        if not packages._match_name(filename):
             continue
-        if repo['archs'] and arch not in repo['archs']:
+
+        name, version, arch = packages._get_data(filepath)
+        if not packages._match_arch(arch):
             continue
-        print file
+
+        print filepath
 
 
 def _main():

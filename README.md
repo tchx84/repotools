@@ -69,3 +69,24 @@ Once the packages are copied to the updates repository, these packages
 will be signed and the repository metadata will be updated.
 
 3. Done.
+
+Tricks
+------
+
+* Update specific packages on updates repositories.
+
+```
+./update.sh xo1 updates kernel driver
+```
+
+repotools will only deploy in the xo1 updates repository, packages that
+matches the kerwords "kernel" or "driver".
+
+* Use some of the internal tools.
+
+```
+./helpers/find.py -d ~/Devel/repos -a x86_64 -s authbind
+```
+
+repotools will list all packages are under ~/Devel/repos directory,
+recusively, that matches with the specified architectures and keywords.

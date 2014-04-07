@@ -18,7 +18,7 @@ and automatization.
 How can I use it?
 -----------------
 
-0. Create your repository confiuration file.
+0. Create your repository configuration file.
 
     ```
     cp etc/repos.json.example etc/repos.json

@@ -57,7 +57,7 @@ do
     fi
 
     # update repository metadata
-    createrepo --database $repo &> /dev/null
+    createrepo --database --simple-md-filenames $repo &> /dev/null
     if [ $? != 0  ]; then
         echo "Could not update repodata."
         exit -1

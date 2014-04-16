@@ -41,12 +41,11 @@ class Packages(list):
         """ obtains a sub-set of package metadata """
 
         header = self._get_header(path)
-        name = header[rpm.RPMTAG_NAME]
-        version = '%s-%s' % (header[rpm.RPMTAG_VERSION],
-                             header[rpm.RPMTAG_RELEASE])
+        name = header['name']
+        version = (header['epoch'], header['version'], header['release'])
 
-        arch = header[rpm.RPMTAG_ARCH]
-        if header[rpm.RPMTAG_SOURCE]:
+        arch = header['arch']
+        if header['source']:
             arch = 'src'
 
         return name, version, arch
@@ -99,7 +98,7 @@ class Packages(list):
                 package = _index[arch].get(name, None)
 
                 if package is not None:
-                    if version > package['version']:
+                    if rpm.labelCompare(version, package['version']) == 1:
                         self.remove(package)
                     else:
                         continue
